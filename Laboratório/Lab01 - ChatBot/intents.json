@@ -1,0 +1,50 @@
+{"intents":[
+    { "tag": "saudacao",
+      "patterns":["Ola","Opa","Oi", "tudo bem","como vai"],
+      "responses": ["Oi","Olá"]
+    },
+    { "tag": "despedida",
+      "patterns":["valeu","tchau","Obrigado","fui","beleza"],
+      "responses": ["Até breve","Falou"]
+    },
+    { "tag": "data_prova",
+      "patterns":["Quando sera a prova?","A prova será em que dia?","vai ter exame?"],
+      "responses": ["no dia 26"]
+    },
+    {
+      "tag": "pergunta 1",
+      "patterns": ["O que é o programa PIPE", "o que é PIPE", "para que serve o programa PIPE", "PIPE"],
+      "responses": ["O Programa Pesquisa Inovativa em Pequenas Empresas da FAPESP apoia a pesquisa científica e tecnológica em pequenas empresas no Estado de São Paulo. Seus objetivos são promover a inovação tecnológica, aumentar a competitividade das empresas, incentivar parcerias com pesquisadores acadêmicos, e contribuir para o desenvolvimento de núcleos de tecnologia nas empresas, além de criar uma cultura de inovação e gerar empregos para pesquisadores no setor empresarial."]
+    },
+    {
+      "tag": "pergunta 2",
+      "patterns": ["Quando posso submeter uma proposta PIPE", "proposta PIPE", "proposta"],
+      "responses": ["As propostas para o PIPE Fase 1, Fase 2 e PIPE Invest são recebidas em fluxo contínuo durante todo o ano."]
+    },
+    {
+      "tag": "pergunta 3",
+      "patterns": ["A fase 1 é obrigatória", "Posso ir direto para a fase 2", "Posso pular a fase 1"],
+      "responses": ["A empresa pode enviar uma proposta para a Fase 2 Direta, sendo essencial demonstrar a viabilidade técnica da pesquisa. Para isso, é necessário apresentar um bom documento de “Justificativa para a Fase 2 Direta”."]
+    },
+    {
+      "tag": "pergunta 4",
+      "patterns": ["Preciso ter dedicação exclusiva ao projeto", "dedicação mínima", "dedicação", "dedicação exclusiva"],
+      "responses": ["Caso o pesquisador principal seja pago pela empresa e não receba bolsa da FAPESP, é exigida a dedicação mínima de 24 horas semanais ao projeto na empresa. Em casos excepcionais, em que a empresa demonstra não poder arcar com o salário do Pesquisador Responsável, a FAPESP pode analisar solicitação de Bolsa de Pesquisa em Pequena Empresa (Bolsa PE FAPESP). Se o pesquisador principal solicitar Bolsa PE, é necessária a dedicação mínima de 40 horas semanais ao projeto."]
+    },
+    {
+      "tag": "pergunta 5",
+      "patterns": ["Posso desenvolver a pesquisa na Universidade", "universidade", "pesquisa na universidade"],
+      "responses": ["Não. A pesquisa deve ser desenvolvida na empresa. Eventualmente, algumas atividades específicas da pesquisa podem ser sub-contratadas de laboratórios de universidades ou de consultores acadêmicos desde que muito bem justificadas e não se constituam na parte central da pesquisa."]
+    },
+    {
+      "tag": "pergunta 6",
+      "patterns": ["O que são bolsas TT-1, TT-2, TT-3", "TT-1", "TT-2", "TT-3"],
+      "responses": ["São bolsas de Treinamento Técnico que têm por objetivo treinar e aperfeiçoar alunos de cursos técnicos, de nível médio e superior e de recém-formados, visando à sua futura incorporação à equipe de P&D da empresa. Para cada bolsa solicitada é fundamental a apresentação de um plano de trabalho individual conforme descrito em fapesp.br/tt."]
+    },
+      {
+      "tag": "pergunta 7",
+      "patterns": ["O que são bolsas TT-4, TT-4A, TT-5", "TT-4", "TT-4A", "TT-5"],
+      "responses": ["São bolsas de Treinamento Técnico destinadas a profissionais com formação altamente especializada, para desenvolver atividades técnicas complexas junto ao projeto de pesquisa. Para cada bolsa solicitada é fundamental a apresentação de um plano de trabalho individual de 2 páginas, detalhando tecnicamente as tarefas a serem realizadas conforme descrito em fapesp.br/tt. O tempo de experiência do candidato é contado após a conclusão da graduação."]
+    }
+  ]
+  }
