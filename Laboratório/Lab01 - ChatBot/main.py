@@ -1,9 +1,16 @@
-from chatBot import ChatBot
+#pip install nltk numpy tensorflow
+
+from chatbot import ChatBot
 myChatBot = ChatBot()
 
 
+#apenas carregar um modelo pronto
+myChatBot.loadModel()
+
 #criar o modelo
-myChatBot.createModel()
+#myChatBot.createModel()
+
+
 
 
 print("Bem vindo ao Chatbot")
