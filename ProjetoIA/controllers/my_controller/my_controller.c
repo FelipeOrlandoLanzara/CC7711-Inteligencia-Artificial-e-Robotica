@@ -219,123 +219,125 @@ while (wb_robot_step(TIME_STEP) != -1) {
   wb_led_set(Leds[0], wb_led_get(Leds[0]) * -1);  // Pisca LED 0
 
   // Se detectar parede e ainda não girou
-  if((LeituraSensorProx[0] > 1400 || LeituraSensorProx[7] > 1400) && girou == 0) {
-    contador += 1;
-    printf("Contador = %d\n",contador);
-    printf("oi");
+  if ((LeituraSensorProx[0] > 1400 || LeituraSensorProx[7] > 1400) && girou == 0) {
     printf("Parede detectada. Parando e girando...\n");
-    
-    if(contador % 2 == 0){
+
+    if (contador % 2 == 0) {
       wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);  // Espera um tempo
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);  // Espera um tempo
     
-    // Espera tempo suficiente para girar 90 graus
-    int passosGiro = (int)((1000.0 / TIME_STEP) * 2.0);  // ~1 segundo
-    
-    // Gira 90 graus no sentido anti-horário (esquerda para trás, direita para frente)
-    wb_motor_set_velocity(MotorEsquerdo, -6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para após o giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Anda para frente por um curto tempo (~0.5 segundos)
-    int passosAndar = (int)((1000.0 / TIME_STEP) * 2.0);  // meio segundo
-    
-    wb_motor_set_velocity(MotorEsquerdo, 6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    
-    for (int j = 0; j < passosAndar; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para o robô antes do segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Gira mais 90 graus no sentido anti-horário (esquerda)
-    wb_motor_set_velocity(MotorEsquerdo, -6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para após o segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    girou = 1;  // Marca que já girou, pra não repetir o giro
-    
-    
-    
-    
-    
+      // Espera tempo suficiente para girar 90 graus
+      int passosGiro = (int)((1000.0 / TIME_STEP) * 2.0);  // ~1 segundo
       
+      // Gira 90 graus no sentido horário
+      wb_motor_set_velocity(MotorEsquerdo, 6.28);   // esquerda para frente
+      wb_motor_set_velocity(MotorDireito, -6.28);   // direita para trás
+      
+      for (int j = 0; j < passosGiro; j++) {
+        wb_robot_step(TIME_STEP);
+      }
+      
+      // Para após o giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);
+      
+      
+      //TÉRMINO PRIMEIRO GIRO
+      
+      // Anda para frente por um curto tempo (~0.5 segundos)
+      int passosAndar = (int)((1000.0 / TIME_STEP) * 2.0);  // meio segundo
+      int passosGiro2 = (int)((1000.0 / TIME_STEP) * 2.1);  // ~1 segundo
+      
+      wb_motor_set_velocity(MotorEsquerdo, 6.28);
+      wb_motor_set_velocity(MotorDireito, 6.28);
+      
+      for (int j = 0; j < passosAndar; j++) {
+        wb_robot_step(TIME_STEP);
+      }
+      
+      // Para o robô antes do segundo giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);
+      
+      wb_motor_set_velocity(MotorEsquerdo, 6.28);   // esquerda para frente
+      wb_motor_set_velocity(MotorDireito, -6.28);   // direita para trás
+      
+      for (int j = 0; j < passosGiro2; j++) {
+        wb_robot_step(TIME_STEP);
+      }
+      
+      // Para após o segundo giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);
+      
+      girou = 1;  // Marca que já girou, pra não repetir o giro
     }else{
-      // Para o robô
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);  // Espera um tempo
-
     
-    // Espera tempo suficiente para girar 90 graus
-    int passosGiro = (int)((1000.0 / TIME_STEP) * 2.0);  // ~1 segundo
-    
-    // Gira 90 graus no sentido horário (esquerda para frente, direita para trás)
-    wb_motor_set_velocity(MotorEsquerdo, 6.28);
-    wb_motor_set_velocity(MotorDireito, -6.28);
-
-    
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-
-    // Para após o giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Anda para frente por um curto tempo (~0.5 segundos)
-    int passosAndar = (int)((1000.0 / TIME_STEP) * 2.0);  // meio segundo
-    
-    wb_motor_set_velocity(MotorEsquerdo, 6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    
-    for (int j = 0; j < passosAndar; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para o robô antes do segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Gira mais 90 graus no sentido anti-horário (esquerda)
-    wb_motor_set_velocity(MotorEsquerdo, -6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para após o segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    girou = 1;  // Marca que já girou, pra não repetir o giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);  // Espera um tempo
       
-    }
+      
+      // Espera tempo suficiente para girar 90 graus
+      int passosGiro = (int)((1000.0 / TIME_STEP) * 2.0);  // ~1 segundo
+      
+      // Gira 90 graus no sentido anti horário
+      wb_motor_set_velocity(MotorEsquerdo, -6.28);  // esquerda para trás
+      wb_motor_set_velocity(MotorDireito, 6.28);    // direita para frente
+
+      
+      for (int j = 0; j < passosGiro; j++) {
+        wb_robot_step(TIME_STEP);
+      }
+      
+      // Para após o giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);
+      
+      
+      //TÉRMINO PRIMEIRO GIRO
+      
+      // Anda para frente por um curto tempo (~0.5 segundos)
+      int passosAndar = (int)((1000.0 / TIME_STEP) * 2.0);  // meio segundo
+      int passosGiro2 = (int)((1000.0 / TIME_STEP) * 2.0);  // ~1 segundo
+      
+      wb_motor_set_velocity(MotorEsquerdo, 6.28);
+      wb_motor_set_velocity(MotorDireito, 6.28);
+      
+      for (int j = 0; j < passosAndar; j++) {
+        wb_robot_step(TIME_STEP);
+      }
+      
+      // Para o robô antes do segundo giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);
+      
+      wb_motor_set_velocity(MotorEsquerdo, -6.28);  // esquerda para trás
+      wb_motor_set_velocity(MotorDireito, 6.28);    // direita para frente
+      
+      for (int j = 0; j < passosGiro2; j++) {
+        wb_robot_step(TIME_STEP);
+      }
+      
+      // Para após o segundo giro
+      wb_motor_set_velocity(MotorEsquerdo, 0);
+      wb_motor_set_velocity(MotorDireito, 0);
+      wb_robot_step(TIME_STEP);
+      
+      girou = 1;  // Marca que já girou, pra não repetir o giro
     
-  }
+    }
+
+    contador += 1;
+    printf("Contador = %d\n", contador);
+}
+
   
   else if (LeituraSensorProx[0] <= 1400 && LeituraSensorProx[7] <= 1400) {
     // Continua andando
@@ -344,90 +346,7 @@ while (wb_robot_step(TIME_STEP) != -1) {
     girou = 0;  // Reseta a flag para permitir nova rotação
   }
   
-  if((LeituraSensorProx[0] > 100 || LeituraSensorProx[7] > 100) && (LeituraSensorProx[0] <= 400 || LeituraSensorProx[7] <= 400)) {
-      printf("CAIXA!!\n");
-      wb_motor_set_velocity(MotorEsquerdo, 0);
-      wb_motor_set_velocity(MotorDireito, 0);
-      wb_robot_step(TIME_STEP);  // Espera um tempo
-      
-      // Espera tempo suficiente para girar 90 graus
-    int passosGiro = (int)((1000.0 / TIME_STEP) * 2.0);  // ~1 segundo
-    
-    // Gira 90 graus no sentido horário (esquerda para frente, direita para trás)
-    wb_motor_set_velocity(MotorEsquerdo, 6.28);
-    wb_motor_set_velocity(MotorDireito, -6.28);
-
-    
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-
-    // Para após o giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Anda para frente por um curto tempo (~0.5 segundos)
-    int passosAndar = (int)((1000.0 / TIME_STEP) * 1.4);  // meio segundo
-    
-    wb_motor_set_velocity(MotorEsquerdo, 6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    
-    for (int j = 0; j < passosAndar; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para o robô antes do segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Gira mais 90 graus no sentido anti-horário (esquerda)
-    wb_motor_set_velocity(MotorEsquerdo, -6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para após o segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-     // Anda para frente por um curto tempo (~0.5 segundos)
-    int passosAndar2 = (int)((1000.0 / TIME_STEP) * 2.1);  // meio segundo
-    
-    wb_motor_set_velocity(MotorEsquerdo, 6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    
-    for (int j = 0; j < passosAndar2; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para o robô antes do segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    // Gira mais 90 graus no sentido anti-horário (esquerda)
-    wb_motor_set_velocity(MotorEsquerdo, -6.28);
-    wb_motor_set_velocity(MotorDireito, 6.28);
-    for (int j = 0; j < passosGiro; j++) {
-      wb_robot_step(TIME_STEP);
-    }
-    
-    // Para após o segundo giro
-    wb_motor_set_velocity(MotorEsquerdo, 0);
-    wb_motor_set_velocity(MotorDireito, 0);
-    wb_robot_step(TIME_STEP);
-    
-    
-    
-    
-    
-    girou = 1;  // Marca que já girou, pra não repetir o giro
-  }
+  
   
   }
 }
