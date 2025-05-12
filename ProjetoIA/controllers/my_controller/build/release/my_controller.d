@@ -4,4 +4,6 @@ build/release/my_controller.o: my_controller.c \
  /snap/webots/27/usr/share/webots/include/controller/c/webots/nodes.h \
  /snap/webots/27/usr/share/webots/include/controller/c/webots/motor.h \
  /snap/webots/27/usr/share/webots/include/controller/c/webots/distance_sensor.h \
- /snap/webots/27/usr/share/webots/include/controller/c/webots/led.h
+ /snap/webots/27/usr/share/webots/include/controller/c/webots/led.h \
+ /snap/webots/27/usr/share/webots/include/controller/c/webots/supervisor.h \
+ /snap/webots/27/usr/share/webots/include/controller/c/webots/contact_point.h
