@@ -14,6 +14,7 @@
 #include <webots/distance_sensor.h>// wb_distance_sensor_* (sensores de proximidade)
 #include <webots/led.h>            // wb_led_* (se precisar de LEDs)
 #include <webots/supervisor.h>     // wb_supervisor_* (Supervisor)
+#include <math.h>
 
 /* --- Configurações de simulação e robô --- */
 #define TIME_STEP         64      // ms, passo de simulação
@@ -26,7 +27,18 @@
 #define ESCAPE_TIME       0.2     // s que avança após giro
 #define QtddCaixa         18      // número de caixas no mundo
 
+
 int main(int argc, char **argv) {
+  double posicao_original_caixas[QtddCaixa];
+   
+   
+  struct CaixasOriginal{
+    double x;
+    double y;
+    double z;
+  };
+  
+  int posicao_caixas_adicionada = 0;
   wb_robot_init();
   srand(time(NULL));
 
@@ -41,7 +53,26 @@ int main(int argc, char **argv) {
     else
       printf("Falha ao carregar a posição da %s\n", nomeCaixa);
   }
+  
   printf("\n== CAIXAS OK ==\n\n");
+  
+  struct CaixasOriginal caixas;
+  
+  printf("POSIÇÃO ORIGINAL DAS CAIXAS:\n");
+  for(int i = 0 ; i < QtddCaixa; i++){
+        const double *pos = wb_supervisor_node_get_position(caixa[i]);
+        
+        
+        
+        caixas.x = pos[0];
+        caixas.y = pos[1];
+        caixas.z = pos[2];
+        
+        printf("CAIXA%02d: %5.2f, %5.2f, %5.2f\n",
+               i, caixas.x, caixas.y, caixas.z);
+  }
+  
+  
 
   /* --- 2) Inicialização dos sensores de proximidade --- */
   WbDeviceTag ps[N_SENSORS];
@@ -93,20 +124,46 @@ int main(int argc, char **argv) {
         wb_motor_set_velocity(left_motor,  MAX_VELOCITY);
         wb_motor_set_velocity(right_motor, MAX_VELOCITY);
       }
+      
     }
+    
+    
+    
+    
+    
 
     /* 4.5) A cada passo, imprime posições das caixas */
+    
+    /*
     printf("   Posicoes das caixas (X, Y, Z):\n");
     for (int i = 0; i < QtddCaixa; i++) {
       const double *pos = wb_supervisor_node_get_position(caixa[i]);
+      
       if (pos) {
         printf("CAIXA%02d: %5.2f, %5.2f, %5.2f\n",
                i, pos[0], pos[1], pos[2]);
+               
       } else {
         printf("CAIXA%02d: sem referencia\n", i);
       }
     }
     printf("\n");
+    */
+    
+    for (int i = 0; i < QtddCaixa; i++) {
+       const double *pos = wb_supervisor_node_get_position(caixa[i]);
+       
+       if (pos) {
+        printf("CAIXA%02d: %5.2f, %5.2f, %5.2f\n",
+               i, pos[0], pos[1], pos[2]);
+               
+      }
+      
+      else if (pos[0] != caixas.x || pos[1] != caixas.y){
+        printf("DIFERENTE!");
+      }
+    }
+    
   }
 
   /* --- 5) Cleanup --- */
