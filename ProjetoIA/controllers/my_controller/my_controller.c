@@ -26,9 +26,10 @@
 #define OBST_THRESHOLD    100.0   // leitura que indica obstáculo
 #define ESCAPE_TIME       0.2     // s que avança após giro
 #define QtddCaixa         18      // número de caixas no mundo
-
+#define QtddLeds          8       // número de leds acesos
 
 int main(int argc, char **argv) {
+  wb_robot_init();
   double posicao_original_caixas[QtddCaixa];
    
    
@@ -39,7 +40,17 @@ int main(int argc, char **argv) {
   }PosicaoCaixas;
   
   int posicao_caixas_adicionada = 0;
-  wb_robot_init();
+  
+  
+  WbDeviceTag leds[QtddLeds];
+  char led_name[8];
+  
+  for(int i = 0 ; i < QtddLeds; i++){
+    sprintf(led_name , "led%d", i);
+    leds[i] = wb_robot_get_device(led_name);
+  }
+  
+  
   srand(time(NULL));
 
   /* --- 1) Inicializa referências de caixas (Supervisor) --- */
@@ -159,12 +170,27 @@ int main(int argc, char **argv) {
        double dz = fabs(pos[2] - originais[i].z);
        
        if (dx > 1e-6 || dy > 1e-6 || dz > 1e-6) {
-        printf("CAIXA%02d mudou!   antiga=(%.2f,%.2f,%.2f)   nova=(%.2f,%.2f,%.2f)\n",
+        printf("CAIXA%02d mudou!   antiga=(%.5f,%.5f,%.5f)   nova=(%.5f,%.5f,%.5f)\n",
                i,
                originais[i].x, originais[i].y, originais[i].z,
                pos[0], pos[1], pos[2]);
-       
+               
+         wb_motor_set_velocity(left_motor,  0.0);
+         wb_motor_set_velocity(right_motor, 0.0);
+         
+         for(int i = 0; i < QtddLeds; i++){
+           wb_led_set(leds[i], 1);
+         }
+         
+         
+         
+        
+        while(wb_robot_step(TIME_STEP) != -1){
+             wb_motor_set_velocity(left_motor,  VELOCITY_TURN);
+             wb_motor_set_velocity(right_motor,-VELOCITY_TURN);
         }
+       
+      }
     
     }
   }
