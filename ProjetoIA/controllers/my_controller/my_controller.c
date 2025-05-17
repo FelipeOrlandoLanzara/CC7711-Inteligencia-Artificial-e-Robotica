@@ -1,10 +1,3 @@
-/*
- * File:          e-puck_wander_with_boxes.c
- * Description:   Vagueio aleatório para e-puck no Webots,
- *                com giro imediato, fase de “escape” e leitura de posições
- *                de caixas via Supervisor.
- */
-
 #include <stdio.h>                 // printf, sprintf
 #include <stdlib.h>                // srand, rand, RAND_MAX
 #include <time.h>                  // time (para seed de rand)
@@ -16,7 +9,6 @@
 #include <webots/supervisor.h>     // wb_supervisor_* (Supervisor)
 #include <math.h>
 
-/* --- Configurações de simulação e robô --- */
 #define TIME_STEP         64      // ms, passo de simulação
 #define N_SENSORS         8       // ps0…ps7
 #define WHEEL_RADIUS      0.0205  // m
@@ -33,7 +25,7 @@ int main(int argc, char **argv) {
   double posicao_original_caixas[QtddCaixa];
    
    
-  typedef struct{
+  typedef struct{ // armazena a posição original das 18 caixas
     double x;
     double y;
     double z;
@@ -53,7 +45,7 @@ int main(int argc, char **argv) {
   
   srand(time(NULL));
 
-  /* --- 1) Inicializa referências de caixas (Supervisor) --- */
+  
   WbNodeRef caixa[QtddCaixa];
   char nomeCaixa[10];
   for (int i = 0; i < QtddCaixa; i++) {
@@ -72,9 +64,7 @@ int main(int argc, char **argv) {
   printf("POSIÇÃO ORIGINAL DAS CAIXAS:\n");
   for(int i = 0 ; i < QtddCaixa; i++){
         const double *pos = wb_supervisor_node_get_position(caixa[i]);
-        
-        
-        
+         
         originais[i].x = pos[0];
         originais[i].y = pos[1];
         originais[i].z = pos[2];
@@ -84,8 +74,6 @@ int main(int argc, char **argv) {
   }
   
   
-
-  /* --- 2) Inicialização dos sensores de proximidade --- */
   WbDeviceTag ps[N_SENSORS];
   char ps_name[5];
   for (int i = 0; i < N_SENSORS; i++) {
@@ -94,7 +82,6 @@ int main(int argc, char **argv) {
     wb_distance_sensor_enable(ps[i], TIME_STEP);
   }
 
-  /* --- 3) Inicialização dos motores de roda --- */
   WbDeviceTag left_motor  = wb_robot_get_device("left wheel motor");
   WbDeviceTag right_motor = wb_robot_get_device("right wheel motor");
   wb_motor_set_position(left_motor,  INFINITY);
@@ -102,9 +89,8 @@ int main(int argc, char **argv) {
   wb_motor_set_velocity(left_motor,  0.0);
   wb_motor_set_velocity(right_motor, 0.0);
 
-  /* --- 4) Loop principal --- */
   while (wb_robot_step(TIME_STEP) != -1) {
-    // 4.1) Detecta obstáculo pelos sensores de proximidade
+    // Detecta obstáculo pelos sensores de proximidade
     int obstacle = 0;
     for (int i = 0; i < N_SENSORS; i++) {
       if (wb_distance_sensor_get_value(ps[i]) > OBST_THRESHOLD) {
@@ -114,53 +100,32 @@ int main(int argc, char **argv) {
     }
 
     if (!obstacle) {
-      // 4.2) Sem obstáculo: segue em frente
+      // Sem obstáculo: segue em frente
       wb_motor_set_velocity(left_motor,  MAX_VELOCITY);
       wb_motor_set_velocity(right_motor, MAX_VELOCITY);
     } else {
-      // 4.3) Obstáculo: gira imediatamente
+      // Obstáculo: gira imediatamente
       int dir = (rand() % 2) ? +1 : -1;                // +1 = esquerda, -1 = direita
       double duration = 0.5 + ((double)rand() / RAND_MAX); // 0.5–1.5 s
       double start_time = wb_robot_get_time();
-      // Executa giro
+      
+      // Execução do giro
       while (wb_robot_step(TIME_STEP) != -1 &&
-             wb_robot_get_time() - start_time < duration) {
-        wb_motor_set_velocity(left_motor,  dir * VELOCITY_TURN);
-        wb_motor_set_velocity(right_motor, -dir * VELOCITY_TURN);
+          wb_robot_get_time() - start_time < duration) {
+          wb_motor_set_velocity(left_motor,  dir * VELOCITY_TURN);
+          wb_motor_set_velocity(right_motor, -dir * VELOCITY_TURN);
       }
-      // 4.4) Fase de “escape”: avança um pouco para sair do obstáculo
+      // Escape: o robô avança um pouco para sair do obstáculo
       double escape_start = wb_robot_get_time();
       while (wb_robot_step(TIME_STEP) != -1 &&
-             wb_robot_get_time() - escape_start < ESCAPE_TIME) {
-        wb_motor_set_velocity(left_motor,  MAX_VELOCITY);
-        wb_motor_set_velocity(right_motor, MAX_VELOCITY);
+          wb_robot_get_time() - escape_start < ESCAPE_TIME) {
+          wb_motor_set_velocity(left_motor,  MAX_VELOCITY);
+          wb_motor_set_velocity(right_motor, MAX_VELOCITY);
       }
       
     }
     
-    
-    
-    
-    
-
-    /* 4.5) A cada passo, imprime posições das caixas */
-    
-    /*
-    printf("   Posicoes das caixas (X, Y, Z):\n");
-    for (int i = 0; i < QtddCaixa; i++) {
-      const double *pos = wb_supervisor_node_get_position(caixa[i]);
-      
-      if (pos) {
-        printf("CAIXA%02d: %5.2f, %5.2f, %5.2f\n",
-               i, pos[0], pos[1], pos[2]);
-               
-      } else {
-        printf("CAIXA%02d: sem referencia\n", i);
-      }
-    }
-    printf("\n");
-    */
-    
+    // Verifica se a caixa que o robô bateu foi movimentada
     for (int i = 0; i < QtddCaixa; i++) {
        
        if(caixa[i] == NULL) continue;
@@ -194,8 +159,7 @@ int main(int argc, char **argv) {
     
     }
   }
-
-  /* --- 5) Cleanup --- */
+  
   wb_robot_cleanup();
   return 0;
 }
