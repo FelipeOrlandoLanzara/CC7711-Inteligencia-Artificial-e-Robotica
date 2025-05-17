@@ -32,11 +32,11 @@ int main(int argc, char **argv) {
   double posicao_original_caixas[QtddCaixa];
    
    
-  struct CaixasOriginal{
+  typedef struct{
     double x;
     double y;
     double z;
-  };
+  }PosicaoCaixas;
   
   int posicao_caixas_adicionada = 0;
   wb_robot_init();
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
   
   printf("\n== CAIXAS OK ==\n\n");
   
-  struct CaixasOriginal caixas;
+  PosicaoCaixas originais[QtddCaixa];
   
   printf("POSIÇÃO ORIGINAL DAS CAIXAS:\n");
   for(int i = 0 ; i < QtddCaixa; i++){
@@ -64,12 +64,12 @@ int main(int argc, char **argv) {
         
         
         
-        caixas.x = pos[0];
-        caixas.y = pos[1];
-        caixas.z = pos[2];
+        originais[i].x = pos[0];
+        originais[i].y = pos[1];
+        originais[i].z = pos[2];
         
         printf("CAIXA%02d: %5.2f, %5.2f, %5.2f\n",
-               i, caixas.x, caixas.y, caixas.z);
+               i, originais[i].x, originais[i].y, originais[i].z);
   }
   
   
@@ -151,19 +151,22 @@ int main(int argc, char **argv) {
     */
     
     for (int i = 0; i < QtddCaixa; i++) {
-       const double *pos = wb_supervisor_node_get_position(caixa[i]);
        
-       if (pos) {
-        printf("CAIXA%02d: %5.2f, %5.2f, %5.2f\n",
-               i, pos[0], pos[1], pos[2]);
-               
-      }
-      
-      else if (pos[0] != caixas.x || pos[1] != caixas.y){
-        printf("DIFERENTE!");
-      }
-    }
+       if(caixa[i] == NULL) continue;
+       const double *pos = wb_supervisor_node_get_position(caixa[i]);
+       double dx = fabs(pos[0] - originais[i].x);
+       double dy = fabs(pos[1] - originais[i].y);
+       double dz = fabs(pos[2] - originais[i].z);
+       
+       if (dx > 1e-6 || dy > 1e-6 || dz > 1e-6) {
+        printf("CAIXA%02d mudou!   antiga=(%.2f,%.2f,%.2f)   nova=(%.2f,%.2f,%.2f)\n",
+               i,
+               originais[i].x, originais[i].y, originais[i].z,
+               pos[0], pos[1], pos[2]);
+       
+        }
     
+    }
   }
 
   /* --- 5) Cleanup --- */
